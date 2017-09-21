@@ -47,12 +47,12 @@
             app:srcCompat="@android:drawable/ic_menu_save" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/addNote"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground">
         <ImageView
-            android:id="@+id/addnote"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:srcCompat="@drawable/ic_comment" />

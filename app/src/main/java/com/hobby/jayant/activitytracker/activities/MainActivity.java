@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
 
-    private enum PAGETYPE {
+    public enum PAGETYPE {
         SHOOTING("Shooting"),YOGA("Yoga"),EXERCISE("Exercise");
 
         private String pageTitle;

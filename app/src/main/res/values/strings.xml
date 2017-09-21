@@ -4,5 +4,8 @@
     <string name="title_create_save_activity">Add Activity</string>
     <string name="action_settings">Settings</string>
     <string name="statistics">Satistics</string>
+    <string name="notePopupTitle">Areas To Improve</string>
+    <string name="addNote">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="section_format">Hello World from section: %1$d</string>
 </resources>

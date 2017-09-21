@@ -3,16 +3,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/activity_note_detail_popup_element">
-<!--
-    <DatePicker
-        android:id="@+id/datePicker2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
--->
-    <Button
-        android:id="@+id/dateSelectedDone"
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Done" />
+        android:layout_alignParentEnd="true">
+
+        <EditText
+            android:id="@+id/noteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
