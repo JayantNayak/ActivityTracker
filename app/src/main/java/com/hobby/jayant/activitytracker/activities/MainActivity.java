@@ -1,6 +1,7 @@
 package com.hobby.jayant.activitytracker.activities;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,9 +21,21 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import com.hobby.jayant.activitytracker.R;
+import com.hobby.jayant.activitytracker.models.Yoga;
+import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
+import com.hobby.jayant.activitytracker.services.YogaActService;
 import com.hobby.jayant.activitytracker.utils.DownloadImageTask;
+
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -108,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+       // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
+
     }
 
 
@@ -127,10 +143,40 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            YogaActService yogaActivityService  = ActivityTrackerService.getYogaActivityService();
+            Call<List<Yoga>> yogas =  yogaActivityService.findAllActivities();
+
+            yogas.enqueue(new Callback<List<Yoga>>() {
+                @Override
+                public void onResponse(Call<List<Yoga>> call, Response<List<Yoga>> response) {
+
+
+                    List<Yoga>yogaList = response.body();
+                    String com=yogaList.get(0).getComment();
+                   // Toast.makeText(this, "hiii " +com,Toast.LENGTH_LONG).show();
+                    //String com1 = com;
+                    displayToast(com);
+                }
+                @Override
+                public void onFailure(Call<List<Yoga>> call, Throwable t) {
+                    //final TextView textView = (TextView) findViewById(R.id.textView);
+                    //textView.setText("Something went wrong: " + t.getMessage());
+                }
+            });
+
+
+
+
+
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void displayToast(String msg){
+        Toast.makeText(this, "hiii " +msg,Toast.LENGTH_LONG).show();
     }
 
     /**
