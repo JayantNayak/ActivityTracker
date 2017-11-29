@@ -28,11 +28,14 @@ import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
 import com.hobby.jayant.activitytracker.services.UserService;
 import com.hobby.jayant.activitytracker.services.YogaActService;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HTTP;
 
 public class SignupActivity extends AppCompatActivity{
     private AutoCompleteTextView mEmailView;
@@ -154,7 +157,17 @@ public class SignupActivity extends AppCompatActivity{
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     response.headers().toString();
-                    displayToast("created user " +response.headers().toString());
+                    Headers header = response.headers();
+                    if(response.code()==  HttpURLConnection.HTTP_CONFLICT){
+                        displayToast("Email id already registered with another user");
+                    }
+                    else if(response.code()==  HttpURLConnection.HTTP_OK){
+                        displayToast("created user " +response.headers().toString());
+                    }else{
+                        displayToast("Server Error! Try again later.");
+                    }
+
+
                 }
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
@@ -215,7 +228,7 @@ public class SignupActivity extends AppCompatActivity{
         }
     }
     private void displayToast(String msg){
-        Toast.makeText(this, "hiii " +msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg,Toast.LENGTH_LONG).show();
     }
 
 }

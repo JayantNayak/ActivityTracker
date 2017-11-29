@@ -4,6 +4,7 @@ import com.hobby.jayant.activitytracker.models.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -12,6 +13,11 @@ import retrofit2.http.POST;
 
 public interface UserService {
 
-    @POST("api/user")
+    @POST("api/createUser")
     Call<Void> saveUser(@Body User user);
+
+    @GET("api/userlogin")
+    Call<User> loginAndGetUser();
+
+
 }
