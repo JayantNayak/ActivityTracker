@@ -1,53 +1,49 @@
 package com.hobby.jayant.activitytracker.activities;
 
 import android.content.Intent;
-import android.os.StrictMode;
-import android.support.design.widget.TabLayout;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.hobby.jayant.activitytracker.R;
+import com.hobby.jayant.activitytracker.activities.statistics.YogaStatsActivity;
 import com.hobby.jayant.activitytracker.models.Yoga;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
 import com.hobby.jayant.activitytracker.services.YogaActService;
 import com.hobby.jayant.activitytracker.utils.DownloadImageTask;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private String profileUserName;
+    private String basicAuthToken;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -90,12 +86,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        /*String firstname = intent.getStringExtra("firstname");
+        String lastname = intent.getStringExtra("lastname");
+         emailId = intent.getStringExtra("emailId");
+         password = intent.getStringExtra("password");*/
 
+        SharedPreferences usersettings = getSharedPreferences(SiginActivity.PREFS_NAME, 0);
+        String firstname = usersettings.getString(SiginActivity.USER_FIRST_NAME,"null");
+        String lastname = usersettings.getString(SiginActivity.USER_LAST_NAME,"null");
+        basicAuthToken = usersettings.getString(SiginActivity.BASIC_AUTH_TOKEN,"null");
+
+        profileUserName = firstname +" "+ lastname;
+
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -104,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -121,15 +128,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.profileUserName);
+        nav_user.setText(profileUserName);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            //TextView profileName = (TextView)findViewById(R.id.profileUserName);
+           // profileName.setText(profileUserName);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.navigation, menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -143,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            YogaActService yogaActivityService  = ActivityTrackerService.getYogaActivityService();
+            YogaActService yogaActivityService  = ActivityTrackerService.getYogaActivityService(basicAuthToken);
             Call<List<Yoga>> yogas =  yogaActivityService.findAllActivities();
 
             yogas.enqueue(new Callback<List<Yoga>>() {
@@ -152,10 +181,13 @@ public class MainActivity extends AppCompatActivity {
 
 
                     List<Yoga>yogaList = response.body();
-                    String com=yogaList.get(0).getComment();
-                   // Toast.makeText(this, "hiii " +com,Toast.LENGTH_LONG).show();
-                    //String com1 = com;
-                    displayToast(com);
+                    if(yogaList!=null && yogaList.size()>0){
+                        String com=yogaList.toString();
+                        displayToast(com);
+                    }else{
+                        displayToast("no YogaStatsActivity to display");
+                    }
+
                 }
                 @Override
                 public void onFailure(Call<List<Yoga>> call, Throwable t) {
@@ -163,12 +195,6 @@ public class MainActivity extends AppCompatActivity {
                     //textView.setText("Something went wrong: " + t.getMessage());
                 }
             });
-
-
-
-
-
-
 
             return true;
         }
@@ -179,6 +205,33 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "hiii " +msg,Toast.LENGTH_LONG).show();
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.yoga_stats) {
+
+            Intent myIntent = new Intent(MainActivity.this, YogaStatsActivity.class);
+            MainActivity.this.startActivity(myIntent);
+
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
     /**
      * A placeholder fragment containing a simple view.
      */

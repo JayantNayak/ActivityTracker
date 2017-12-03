@@ -2,6 +2,7 @@ package com.hobby.jayant.activitytracker;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 /**
  * Created by I329687 on 8/16/2017.
@@ -15,4 +16,5 @@ public class ActivityTracker extends Application {
         super.onCreate();
         ActivityTracker.context = getApplicationContext();
     }
+
 }

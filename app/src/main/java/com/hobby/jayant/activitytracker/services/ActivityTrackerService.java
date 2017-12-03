@@ -4,6 +4,7 @@ package com.hobby.jayant.activitytracker.services;
 
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
@@ -25,49 +26,76 @@ public  class ActivityTrackerService {
     private static YogaActService yogaActivityService ;
     private static UserService userService ;
 
-    public static YogaActService getYogaActivityService(){
+    public static YogaActService getYogaActivityService(final String  basicAuthToken){
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TEST_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(getHttpClientForBasicAuth(basicAuthToken))
                 .build();
         yogaActivityService = retrofit.create(YogaActService.class);
         return yogaActivityService;
     }
     public static UserService getUserService(){
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .readTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TEST_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
                 .build();
         userService = retrofit.create(UserService.class);
         return userService;
     }
 
     public static UserService getUserBasicAuthService(String usernameoremail , String password){
-        final String authToken = Credentials.basic(usernameoremail, password);
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-                                      @Override
-                                      public Response intercept(Interceptor.Chain chain) throws IOException {
-                                          Request original = chain.request();
-
-                                          Request request = original.newBuilder()
-                                                  .addHeader("Authorization", authToken)
-
-                                                  .method(original.method(), original.body())
-                                                  .build();
-
-                                          return chain.proceed(request);
-                                      }
-                                  });
-
-        OkHttpClient client = httpClient.build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TEST_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
+                .client(getHttpClientForBasicAuth(usernameoremail, password))
                 .build();
         userService = retrofit.create(UserService.class);
         return userService;
+    }
+
+    private static OkHttpClient getHttpClientForBasicAuth(String usernameoremail , String password){
+        final String authToken = Credentials.basic(usernameoremail, password);
+         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                Request request = original.newBuilder()
+                        .addHeader("Authorization", authToken)
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+        return httpClient.build();
+    }
+
+    private static OkHttpClient getHttpClientForBasicAuth(final String authToken){
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                Request request = original.newBuilder()
+                        .addHeader("Authorization", authToken)
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+        return httpClient.build();
     }
 }
