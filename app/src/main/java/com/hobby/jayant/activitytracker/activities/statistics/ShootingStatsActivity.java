@@ -23,9 +23,9 @@ import com.hobby.jayant.activitytracker.activities.MainActivity;
 import com.hobby.jayant.activitytracker.activities.SiginActivity;
 import com.hobby.jayant.activitytracker.custom.CustomEntry;
 import com.hobby.jayant.activitytracker.custom.MyMarkerView;
-import com.hobby.jayant.activitytracker.models.Yoga;
+import com.hobby.jayant.activitytracker.models.Shooting;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
-import com.hobby.jayant.activitytracker.services.YogaActService;
+import com.hobby.jayant.activitytracker.services.ShootingActService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class YogaStatsActivity extends AppCompatActivity  {
+public class ShootingStatsActivity extends AppCompatActivity {
     private String basicAuthToken;
     private LineChart mChart;
     private float yMax=0f;
@@ -46,7 +46,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yoga);
+        setContentView(R.layout.activity_shooting_stats);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,20 +68,17 @@ public class YogaStatsActivity extends AppCompatActivity  {
         progressDialog.setMessage("Fetching stats.");
         progressDialog.show();
 
-        YogaActService yogaActivityService  = ActivityTrackerService.getYogaActivityService(basicAuthToken);
-        Call<List<Yoga>> yogas =  yogaActivityService.findAllActivities();
+        ShootingActService shootingActivityService  = ActivityTrackerService.getShootingActivityService(basicAuthToken);
+        Call<List<Shooting>> shootings =  shootingActivityService.findAllActivities();
 
-        yogas.enqueue(new Callback<List<Yoga>>() {
+        shootings.enqueue(new Callback<List<Shooting>>() {
             @Override
-            public void onResponse(Call<List<Yoga>> call, Response<List<Yoga>> response) {
+            public void onResponse(Call<List<Shooting>> call, Response<List<Shooting>> response) {
 
 
-                List<Yoga>yogaList = response.body();
-                if(yogaList!=null && yogaList.size()>0){
-                    //String com=yogaList.toString();
-                    //displayToast(com);
-                    // yoga list should be in ascending order by date otherwise exception is thrown
-                   initGraph(yogaList);
+                List<Shooting>shootingList = response.body();
+                if(shootingList!=null && shootingList.size()>0){
+                    initGraph(shootingList);
                 }else{
                     displayToast("No stats to display!");
                 }
@@ -89,7 +86,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
 
             }
             @Override
-            public void onFailure(Call<List<Yoga>> call, Throwable t) {
+            public void onFailure(Call<List<Shooting>> call, Throwable t) {
                 progressDialog.dismiss();
                 displayToast("Something went wrong!");
             }
@@ -98,7 +95,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
 
 
     }
-    void initGraph(List<Yoga>yogaListData){
+    void initGraph(List<Shooting>shootingListData){
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -123,8 +120,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
         mChart.setBackgroundColor(Color.WHITE);
         mChart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
-        //setData(100, 30);
-        setYogaData(yogaListData);
+        setShootingData(shootingListData);
         mChart.invalidate();
 
         // get the legend (only possible after setting data)
@@ -150,7 +146,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
-               long millis = TimeUnit.DAYS.toMillis((long) value);
+                long millis = TimeUnit.DAYS.toMillis((long) value);
                 //long millis = (long) value;
                 Date date = new Date(millis);
                 return mFormat.format(date);
@@ -165,7 +161,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
         leftAxis.setGranularityEnabled(true);
         leftAxis.setAxisMinimum(-10f);
         //leftAxis.setAxisMaximum(170f);
-        leftAxis.setAxisMaximum(yMax+5f);
+        leftAxis.setAxisMaximum(yMax+200f);
         leftAxis.setYOffset(-9f);
         //leftAxis.setYOffset(-15f);
         leftAxis.setTextColor(Color.rgb(255, 192, 56));
@@ -227,7 +223,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
         mChart.setData(data);
     }
 
-    private void setYogaData(List<Yoga>yogaList){
+    private void setShootingData(List<Shooting>shootingList){
         ArrayList<Entry> values = new ArrayList<Entry>();
 
 
@@ -236,25 +232,25 @@ public class YogaStatsActivity extends AppCompatActivity  {
         float from = now;
         float x = from;
         // count = hours
-        float to = now + yogaList.size();
+        float to = now + shootingList.size();
 
-        for(Yoga yoga:yogaList){
-            float y = TimeUnit.MILLISECONDS.toMinutes(yoga.getDuration());
+        for(Shooting shooting:shootingList){
+            //float y = TimeUnit.MILLISECONDS.toMinutes(shooting.getDuration());
+            float y = shooting.getTotalscore();
             if(y>yMax){
                 yMax = y;
             }
 
-            //x = yoga.getDate();
-            x = TimeUnit.MILLISECONDS.toDays(yoga.getDate());
+            x = TimeUnit.MILLISECONDS.toDays(shooting.getDate());
             //temporary hack as date x axis was 1 day behind
             // remove after finding the bug
             x++;
             Entry e = new Entry(x, y);
             CustomEntry ce;
-            if(yoga.getComment()!=null){
-                ce = new CustomEntry(MainActivity.PAGETYPE.YOGA,x,y,yoga.getRating(),yoga.getComment());
+            if(shooting.getComment()!=null){
+                ce = new CustomEntry(MainActivity.PAGETYPE.SHOOTING,shooting.getTotalshots(),x,y,shooting.getComment());
             }else{
-                ce = new CustomEntry(MainActivity.PAGETYPE.YOGA,x,y,yoga.getRating());
+                ce = new CustomEntry(MainActivity.PAGETYPE.SHOOTING,shooting.getTotalshots(),x,y);
             }
 
             values.add(ce);

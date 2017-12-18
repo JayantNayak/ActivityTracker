@@ -3,35 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+ <!--   <group android:checkableBehavior="single"
+        android:title="Statistics">
         <item
             android:id="@+id/yoga_stats"
             android:icon="@drawable/ic_menu_camera"
             android:title="Yoga Statistics" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/shooting_stats"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Shooting Statistics" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/exercise_stats"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Yoga Statistics" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />
-    </group>
+    </group>-->
+
+    <item android:title="Statistics"
+        android:icon="@drawable/ic_show_chart">
+        <menu>
+            <item
+                android:id="@+id/yoga_stats"
+                android:icon="@drawable/hinduistyogaposition"
+                android:title="Yoga" />
+            <item
+                android:id="@+id/shooting_stats"
+                android:icon="@drawable/target"
+                android:title="Shooting" />
+            <item
+                android:id="@+id/exercise_stats"
+                android:icon="@drawable/exercise"
+                android:title="Exercise" />
+         <!--   <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Tools" />-->
+        </menu>
+    </item>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/email"
+                android:icon="@drawable/ic_email"
+                android:title="jayant.kumar.nayak92@gmail.com" />
+
         </menu>
     </item>
 

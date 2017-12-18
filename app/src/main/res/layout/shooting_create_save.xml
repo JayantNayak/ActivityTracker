@@ -20,21 +20,6 @@ tools:context="com.hobby.jayant.activitytracker.activities.CreateSaveActivity">
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                tools:text="Shooting" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,11 +34,12 @@ tools:context="com.hobby.jayant.activitytracker.activities.CreateSaveActivity">
                 android:text="Total Score" />
 
             <EditText
+                android:id="@+id/totalScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
 
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
 
         </LinearLayout>
 
@@ -71,10 +57,10 @@ tools:context="com.hobby.jayant.activitytracker.activities.CreateSaveActivity">
                 android:text="Total Shots" />
 
             <EditText
+                android:id="@+id/totalShot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-
                 android:inputType="number" />
 
         </LinearLayout>

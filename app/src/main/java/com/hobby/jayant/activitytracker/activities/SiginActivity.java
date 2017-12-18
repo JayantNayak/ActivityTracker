@@ -75,8 +75,8 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
     public static final String PREFS_NAME = "ActivityTrackerPrefsFile";
     public static final String BASIC_AUTH_TOKEN= "BasicAuthToken";
     public static final String USER_FIRST_NAME= "FirstName";
-    public static final String USER_LAST_NAME= "FirstName";
-    public static final String USER_EMAILID= "FirstName";
+    public static final String USER_LAST_NAME= "LastName";
+    public static final String USER_EMAILID= "EmailId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +98,8 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
         //delete lateron
-        mEmailView.setText("jay@gmail.com");
-        mPasswordView.setText("mypassword");
+       // mEmailView.setText("jay@gmail.com");
+        //mPasswordView.setText("mypassword");
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override

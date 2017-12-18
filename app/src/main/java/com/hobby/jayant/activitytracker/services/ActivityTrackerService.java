@@ -24,7 +24,10 @@ public  class ActivityTrackerService {
     private static final String TEST_URL ="https://tranquil-crag-24504.herokuapp.com/";
     //private static final String TEST_URL ="https://api.github.com/";
     private static YogaActService yogaActivityService ;
+    private static ExerciseActService exerciseActivityService ;
+    private static ShootingActService shootingActivityService;
     private static UserService userService ;
+    private static PhotosActService photoActService;
 
     public static YogaActService getYogaActivityService(final String  basicAuthToken){
 
@@ -36,6 +39,31 @@ public  class ActivityTrackerService {
         yogaActivityService = retrofit.create(YogaActService.class);
         return yogaActivityService;
     }
+
+
+    public static ExerciseActService getExerciseActivityService(final String  basicAuthToken){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(TEST_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getHttpClientForBasicAuth(basicAuthToken))
+                .build();
+        exerciseActivityService = retrofit.create(ExerciseActService.class);
+        return exerciseActivityService;
+    }
+
+    public static ShootingActService getShootingActivityService(final String  basicAuthToken){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(TEST_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getHttpClientForBasicAuth(basicAuthToken))
+                .build();
+        shootingActivityService = retrofit.create(ShootingActService.class);
+        return shootingActivityService;
+    }
+
+
     public static UserService getUserService(){
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(2, TimeUnit.MINUTES)
@@ -48,6 +76,20 @@ public  class ActivityTrackerService {
                 .build();
         userService = retrofit.create(UserService.class);
         return userService;
+    }
+
+    public static PhotosActService getPhotoActService(){
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .readTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://gdurl.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                .build();
+        photoActService = retrofit.create(PhotosActService.class);
+        return photoActService;
     }
 
     public static UserService getUserBasicAuthService(String usernameoremail , String password){

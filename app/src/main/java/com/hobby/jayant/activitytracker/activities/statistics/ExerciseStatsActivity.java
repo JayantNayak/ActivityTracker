@@ -23,9 +23,9 @@ import com.hobby.jayant.activitytracker.activities.MainActivity;
 import com.hobby.jayant.activitytracker.activities.SiginActivity;
 import com.hobby.jayant.activitytracker.custom.CustomEntry;
 import com.hobby.jayant.activitytracker.custom.MyMarkerView;
-import com.hobby.jayant.activitytracker.models.Yoga;
+import com.hobby.jayant.activitytracker.models.Exercise;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
-import com.hobby.jayant.activitytracker.services.YogaActService;
+import com.hobby.jayant.activitytracker.services.ExerciseActService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class YogaStatsActivity extends AppCompatActivity  {
+public class ExerciseStatsActivity extends AppCompatActivity {
     private String basicAuthToken;
     private LineChart mChart;
     private float yMax=0f;
@@ -46,7 +46,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yoga);
+        setContentView(R.layout.activity_exercise_stats);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,20 +68,17 @@ public class YogaStatsActivity extends AppCompatActivity  {
         progressDialog.setMessage("Fetching stats.");
         progressDialog.show();
 
-        YogaActService yogaActivityService  = ActivityTrackerService.getYogaActivityService(basicAuthToken);
-        Call<List<Yoga>> yogas =  yogaActivityService.findAllActivities();
+        ExerciseActService exerciseActivityService  = ActivityTrackerService.getExerciseActivityService(basicAuthToken);
+        Call<List<Exercise>> exercises =  exerciseActivityService.findAllActivities();
 
-        yogas.enqueue(new Callback<List<Yoga>>() {
+        exercises.enqueue(new Callback<List<Exercise>>() {
             @Override
-            public void onResponse(Call<List<Yoga>> call, Response<List<Yoga>> response) {
+            public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
 
 
-                List<Yoga>yogaList = response.body();
-                if(yogaList!=null && yogaList.size()>0){
-                    //String com=yogaList.toString();
-                    //displayToast(com);
-                    // yoga list should be in ascending order by date otherwise exception is thrown
-                   initGraph(yogaList);
+                List<Exercise>exerciseList = response.body();
+                if(exerciseList!=null && exerciseList.size()>0){
+                   initGraph(exerciseList);
                 }else{
                     displayToast("No stats to display!");
                 }
@@ -89,7 +86,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
 
             }
             @Override
-            public void onFailure(Call<List<Yoga>> call, Throwable t) {
+            public void onFailure(Call<List<Exercise>> call, Throwable t) {
                 progressDialog.dismiss();
                 displayToast("Something went wrong!");
             }
@@ -98,7 +95,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
 
 
     }
-    void initGraph(List<Yoga>yogaListData){
+    void initGraph(List<Exercise>exerciseListData){
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -123,8 +120,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
         mChart.setBackgroundColor(Color.WHITE);
         mChart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
-        //setData(100, 30);
-        setYogaData(yogaListData);
+        setExerciseData(exerciseListData);
         mChart.invalidate();
 
         // get the legend (only possible after setting data)
@@ -150,7 +146,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
-               long millis = TimeUnit.DAYS.toMillis((long) value);
+                long millis = TimeUnit.DAYS.toMillis((long) value);
                 //long millis = (long) value;
                 Date date = new Date(millis);
                 return mFormat.format(date);
@@ -227,7 +223,7 @@ public class YogaStatsActivity extends AppCompatActivity  {
         mChart.setData(data);
     }
 
-    private void setYogaData(List<Yoga>yogaList){
+    private void setExerciseData(List<Exercise>exerciseList){
         ArrayList<Entry> values = new ArrayList<Entry>();
 
 
@@ -236,25 +232,24 @@ public class YogaStatsActivity extends AppCompatActivity  {
         float from = now;
         float x = from;
         // count = hours
-        float to = now + yogaList.size();
+        float to = now + exerciseList.size();
 
-        for(Yoga yoga:yogaList){
-            float y = TimeUnit.MILLISECONDS.toMinutes(yoga.getDuration());
+        for(Exercise exercise:exerciseList){
+            float y = TimeUnit.MILLISECONDS.toMinutes(exercise.getDuration());
             if(y>yMax){
                 yMax = y;
             }
 
-            //x = yoga.getDate();
-            x = TimeUnit.MILLISECONDS.toDays(yoga.getDate());
+            x = TimeUnit.MILLISECONDS.toDays(exercise.getDate());
             //temporary hack as date x axis was 1 day behind
             // remove after finding the bug
             x++;
             Entry e = new Entry(x, y);
             CustomEntry ce;
-            if(yoga.getComment()!=null){
-                ce = new CustomEntry(MainActivity.PAGETYPE.YOGA,x,y,yoga.getRating(),yoga.getComment());
+            if(exercise.getComment()!=null){
+                ce = new CustomEntry(MainActivity.PAGETYPE.EXERCISE,x,y,exercise.getRating(),exercise.getComment());
             }else{
-                ce = new CustomEntry(MainActivity.PAGETYPE.YOGA,x,y,yoga.getRating());
+                ce = new CustomEntry(MainActivity.PAGETYPE.EXERCISE,x,y,exercise.getRating());
             }
 
             values.add(ce);

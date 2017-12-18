@@ -2,9 +2,6 @@ package com.hobby.jayant.activitytracker.models;
 
 
 
-
-//import org.joda.time.LocalDate;
-
 public class Yoga {
 
 	private Long id;

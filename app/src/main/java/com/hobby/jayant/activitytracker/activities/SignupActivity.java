@@ -3,13 +3,10 @@ package com.hobby.jayant.activitytracker.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,21 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hobby.jayant.activitytracker.R;
-import com.hobby.jayant.activitytracker.fragments.NoteDialogFragment;
 import com.hobby.jayant.activitytracker.models.User;
-import com.hobby.jayant.activitytracker.models.Yoga;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
 import com.hobby.jayant.activitytracker.services.UserService;
-import com.hobby.jayant.activitytracker.services.YogaActService;
 
 import java.net.HttpURLConnection;
-import java.util.List;
 
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HTTP;
 
 public class SignupActivity extends AppCompatActivity{
     private AutoCompleteTextView mEmailView;
@@ -161,8 +153,11 @@ public class SignupActivity extends AppCompatActivity{
                     if(response.code()==  HttpURLConnection.HTTP_CONFLICT){
                         displayToast("Email id already registered with another user");
                     }
-                    else if(response.code()==  HttpURLConnection.HTTP_OK){
-                        displayToast("created user " +response.headers().toString());
+                    else if(response.code()==  HttpURLConnection.HTTP_CREATED || response.code()==  HttpURLConnection.HTTP_OK){
+                        displayToast("User created. Please login");
+                        Intent myIntent = new Intent(SignupActivity.this, SiginActivity.class);
+                        SignupActivity.this.startActivity(myIntent);
+
                     }else{
                         displayToast("Server Error! Try again later.");
                     }
@@ -173,7 +168,7 @@ public class SignupActivity extends AppCompatActivity{
                 public void onFailure(Call<Void> call, Throwable t) {
                     //final TextView textView = (TextView) findViewById(R.id.textView);
                     //textView.setText("Something went wrong: " + t.getMessage());
-                    displayToast("Failed " + t.getMessage());
+                    displayToast("Something went wrong." );
                 }
             });
 

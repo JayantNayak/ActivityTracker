@@ -31,6 +31,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_yoga">yoga</string>
     <string name="title_activity_demo_stats">DemoStatsActivity</string>
+    <string name="title_activity_exercise_stats">ExerciseStatsActivity</string>
+    <string name="title_activity_shooting_stats">ShootingStatsActivity</string>
 
 
 </resources>

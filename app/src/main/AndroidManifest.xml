@@ -88,6 +88,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hobby.jayant.activitytracker.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.statistics.ExerciseStatsActivity"
+            android:label="@string/title_activity_exercise_stats"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hobby.jayant.activitytracker.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.statistics.ShootingStatsActivity"
+            android:label="@string/title_activity_shooting_stats"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hobby.jayant.activitytracker.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -34,9 +34,13 @@ import android.widget.Toast;
 
 import com.hobby.jayant.activitytracker.R;
 import com.hobby.jayant.activitytracker.fragments.NoteDialogFragment;
+import com.hobby.jayant.activitytracker.models.Exercise;
+import com.hobby.jayant.activitytracker.models.Shooting;
 import com.hobby.jayant.activitytracker.models.User;
 import com.hobby.jayant.activitytracker.models.Yoga;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
+import com.hobby.jayant.activitytracker.services.ExerciseActService;
+import com.hobby.jayant.activitytracker.services.ShootingActService;
 import com.hobby.jayant.activitytracker.services.UserService;
 import com.hobby.jayant.activitytracker.services.YogaActService;
 
@@ -58,6 +62,8 @@ public class CreateSaveActivity extends AppCompatActivity implements View.OnClic
     private PopupWindow calendarPopupWindow;
     private Button btnClosePopup;
     private LinearLayout btnAddNote;
+    private EditText totalShotsScore;
+    private EditText totalShots;
     private TextView calendarText;
     private LinearLayout calendarBtn;
     private LinearLayout saveBtn;
@@ -87,6 +93,7 @@ public class CreateSaveActivity extends AppCompatActivity implements View.OnClic
 
         if(MainActivity.PAGETYPE.SHOOTING.toString().equals(pageTitle)){
             setContentView(R.layout.shooting_create_save);
+            initShootingTypeActivity();
         }else if(MainActivity.PAGETYPE.YOGA.toString().equals(pageTitle)){
             setContentView(R.layout.yoga_create_save);
             initYogaAndExerciseTypeActivity();
@@ -116,6 +123,13 @@ public class CreateSaveActivity extends AppCompatActivity implements View.OnClic
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setIndeterminate(true);
+    }
+
+    private void initShootingTypeActivity(){
+
+        totalShotsScore=(EditText) findViewById(R.id.totalScore);
+        totalShots=(EditText) findViewById(R.id.totalShot);
+
     }
     private void initYogaAndExerciseTypeActivity(){
         doneOnce = false;
@@ -222,23 +236,199 @@ public class CreateSaveActivity extends AppCompatActivity implements View.OnClic
             case R.id.addItem:
 
                 if(MainActivity.PAGETYPE.SHOOTING.toString().equals(pageTitle)){
-                    //setContentView(R.layout.shooting_create_save);
+                    saveShootingActivity();
                 }else if(MainActivity.PAGETYPE.YOGA.toString().equals(pageTitle)){
-                    //setContentView(R.layout.yoga_create_save);
-                   // initYogaAndExerciseTypeActivity();
                     saveYogaActivity();
                 }else if(MainActivity.PAGETYPE.EXERCISE.toString().equals(pageTitle)){
-                   // setContentView(R.layout.exercise_create_save);
-                   // initYogaAndExerciseTypeActivity();
+                    saveExerciseActivity();
                 }
 
                 break;
         }
     }
+
+    private void saveShootingActivity(){
+
+
+        Long dateTime= 0L;
+        String dateText = (String) calendarText.getText();
+
+        String comment = (String) noteImprovText.getText();
+
+        boolean validShooting = true;
+        StringBuffer msg = new StringBuffer(" Enter a valid ");
+        if(dateText== null || "".equals(dateText)){
+            msg.append("date, ");
+            validShooting = false;
+        }else if("Today".equals(dateText)){
+            dateTime = System.currentTimeMillis();
+        }
+        else {
+
+            Date date = null;
+            try {
+                date = sdf.parse(dateText);
+                dateTime = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                validShooting = false;
+            }
+        }
+
+        float totalScores = Float.valueOf(totalShotsScore.getText().toString());
+        int totalShotsFired = Integer.parseInt(totalShots.getText().toString());
+
+        if(validShooting){
+
+            Shooting shootingActivity;
+            if("".equals(comment)){
+                shootingActivity = new Shooting(totalScores,totalShotsFired,dateTime);
+            }else{
+                shootingActivity = new Shooting(totalScores,totalShotsFired,dateTime,comment);
+            }
+
+
+
+            ShootingActService shootingActService  = ActivityTrackerService.getShootingActivityService(basicAuthToken);
+            Call<Void> userloginCall =  shootingActService.saveActivity(shootingActivity);
+
+            showProgress("Creating Shooting activity...");
+            userloginCall.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    response.headers().toString();
+                    Headers header = response.headers();
+                    if(response.code()==  HttpURLConnection.HTTP_CREATED){
+                        displayToast("ShootingStatsActivity created");
+                        goBackToMainActivity();
+                        dismissProgress();
+
+                    }else if(response.code()==  HttpURLConnection.HTTP_UNAUTHORIZED){
+                        displayToast("Invalid Credentials . Try again!"+header.toString());
+                        Log.d(TAG, " Invalid Credentials . Try again!  "+response.toString() +header.toString());
+                    }
+                    else{
+                        // showProgress(false);
+                        displayToast("Try again!"+header.toString());
+                        Log.d(TAG, " Invalid Credentials . Try again!  "+response.toString() +header.toString());
+                        dismissProgress();
+                    }
+
+
+                }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                    displayToast("Failed " + t.getMessage());
+                    dismissProgress();
+                }
+            });
+
+
+        }else{
+            displayToast(msg.toString());
+        }
+
+
+    }
+    private void saveExerciseActivity(){
+
+
+        Long dateTime= 0L;
+        String dateText = (String) calendarText.getText();
+        int hours = timePicker.getCurrentHour();
+        int minutes = timePicker.getCurrentMinute();
+
+        Long duration = 0L;
+        if(hours !=0 || minutes != 0){
+
+            duration = TimeUnit.SECONDS.toMillis(TimeUnit.HOURS.toSeconds(hours) + TimeUnit.MINUTES.toSeconds(minutes));
+        }
+        int rating = (int) ratingBar.getRating();
+        String comment = (String) noteImprovText.getText();
+
+        boolean validExercise = true;
+        StringBuffer msg = new StringBuffer(" Enter a valid ");
+        if(dateText== null || "".equals(dateText)){
+            msg.append("date, ");
+            validExercise = false;
+        }else if("Today".equals(dateText)){
+            dateTime = System.currentTimeMillis();
+        }
+        else{
+
+            Date date = null;
+            try {
+                date = sdf.parse(dateText);
+                dateTime = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                validExercise = false;
+            }
+
+        }
+        if(duration == 0L){
+            msg.append("time spend, ");
+            validExercise = false;
+        }
+        if(rating == 0){
+            msg.append("rating.");
+            validExercise = false;
+        }
+        if(validExercise){
+
+            Exercise exerciseActivity;
+            if("".equals(comment)){
+                exerciseActivity = new Exercise(dateTime,duration,rating);
+            }else{
+                exerciseActivity = new Exercise(dateTime,duration,rating,comment);
+            }
+
+
+
+            ExerciseActService userService  = ActivityTrackerService.getExerciseActivityService(basicAuthToken);
+            Call<Void> userloginCall =  userService.saveActivity(exerciseActivity);
+
+            showProgress("Creating Exercise activity...");
+            userloginCall.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    response.headers().toString();
+                    Headers header = response.headers();
+                    if(response.code()==  HttpURLConnection.HTTP_CREATED){
+                        displayToast("ExerciseStatsActivity created");
+                        goBackToMainActivity();
+                        dismissProgress();
+
+                    }else if(response.code()==  HttpURLConnection.HTTP_UNAUTHORIZED){
+                        displayToast("Invalid Credentials . Try again!"+header.toString());
+                        Log.d(TAG, " Invalid Credentials . Try again!  "+response.toString() +header.toString());
+                    }
+                    else{
+                        // showProgress(false);
+                        displayToast("Try again!"+header.toString());
+                        Log.d(TAG, " Invalid Credentials . Try again!  "+response.toString() +header.toString());
+                        dismissProgress();
+                    }
+
+
+                }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                    displayToast("Failed " + t.getMessage());
+                    dismissProgress();
+                }
+            });
+
+
+        }else{
+            displayToast(msg.toString());
+        }
+
+
+    }
     private void saveYogaActivity(){
-        //Date activityDate = myCalendar.getTime();
-
-
         Long dateTime= 0L;
         String dateText = (String) calendarText.getText();
         int hours = timePicker.getCurrentHour();
