@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ActivityTracker</string>
+    <string name="app_name">Activity Tracker</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_create_save_activity">Add Activity</string>
     <string name="action_settings">Settings</string>
@@ -20,11 +20,11 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="action_sign_up">New User Sign up</string>
     <string name="prompt_firstname">First Name</string>
     <string name="prompt_lastname">Last Name</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up">Sign up or register</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -33,6 +33,7 @@
     <string name="title_activity_demo_stats">DemoStatsActivity</string>
     <string name="title_activity_exercise_stats">ExerciseStatsActivity</string>
     <string name="title_activity_shooting_stats">ShootingStatsActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
 
 
 </resources>

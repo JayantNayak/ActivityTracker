@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.hobby.jayant.activitytracker.activities.AboutActivity"
+    tools:showIn="@layout/activity_about">
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="Activity Tracker keeps track of all your activities and gets all the statistics at a go.For any assistance contact Admin - jayant.kumar.nayak92@gmail.com "
+        android:textSize="16dp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:inputType="textMultiLine" />
+
+</android.support.constraint.ConstraintLayout>

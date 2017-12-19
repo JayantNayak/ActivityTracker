@@ -19,10 +19,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public  class ActivityTrackerService {
-    //private static final String TEST_URL = "http://localhost:8080";
-    //private static final String TEST_URL ="https://tranquil-crag-24504.herokuapp.com/api/activity/yoga";
-    private static final String TEST_URL ="https://tranquil-crag-24504.herokuapp.com/";
-    //private static final String TEST_URL ="https://api.github.com/";
+
+   //private static final String TEST_URL ="https://tranquil-crag-24504.herokuapp.com/";
+    private static final String TEST_URL ="https://activitytrackershoot.herokuapp.com/";
     private static YogaActService yogaActivityService ;
     private static ExerciseActService exerciseActivityService ;
     private static ShootingActService shootingActivityService;

@@ -33,7 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         List<Fragment> fragmentsList = mFragmentManager.getFragments();
-        if (fragmentsList != null && position <= (fragmentsList.size() - 1)) {
+        if (fragmentsList != null && position <= (fragmentsList.size() - 1) && mDummyItems !=null) {
             PlaceholderFragment placeholderFragment1 = (PlaceholderFragment) fragmentsList.get(position);
             PlaceholderFragment placeholderFragment = (PlaceholderFragment) fragmentsList.get(position);
 

@@ -3,56 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
- <!--   <group android:checkableBehavior="single"
-        android:title="Statistics">
-        <item
-            android:id="@+id/yoga_stats"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Yoga Statistics" />
-        <item
-            android:id="@+id/shooting_stats"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Shooting Statistics" />
-        <item
-            android:id="@+id/exercise_stats"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Yoga Statistics" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>-->
-
     <item android:title="Statistics"
         android:icon="@drawable/ic_show_chart">
         <menu>
             <item
-                android:id="@+id/yoga_stats"
-                android:icon="@drawable/hinduistyogaposition"
-                android:title="Yoga" />
-            <item
                 android:id="@+id/shooting_stats"
-                android:icon="@drawable/target"
+                android:icon="@mipmap/target"
                 android:title="Shooting" />
             <item
-                android:id="@+id/exercise_stats"
-                android:icon="@drawable/exercise"
-                android:title="Exercise" />
-         <!--   <item
-                android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Tools" />-->
-        </menu>
-    </item>
+                android:id="@+id/yoga_stats"
+                android:icon="@mipmap/hinduistyogaposition"
+                android:title="Yoga" />
 
-    <item android:title="Communicate">
-        <menu>
             <item
-                android:id="@+id/email"
-                android:icon="@drawable/ic_email"
-                android:title="jayant.kumar.nayak92@gmail.com" />
-
+                android:id="@+id/exercise_stats"
+                android:icon="@mipmap/exercise"
+                android:title="Exercise" />
         </menu>
     </item>
+    <group>
+        <item
+            android:id="@+id/signout"
+            android:icon="@mipmap/logout"
+            android:title="Sign Out" />
+        <item
+            android:id="@+id/about"
+            android:icon="@mipmap/info"
+            android:title="About" />
+    </group>
 
 </menu>

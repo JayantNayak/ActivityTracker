@@ -1,6 +1,5 @@
 package com.hobby.jayant.activitytracker.activities;
 
-import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -13,13 +12,11 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -36,12 +33,10 @@ import com.hobby.jayant.activitytracker.R;
 import com.hobby.jayant.activitytracker.fragments.NoteDialogFragment;
 import com.hobby.jayant.activitytracker.models.Exercise;
 import com.hobby.jayant.activitytracker.models.Shooting;
-import com.hobby.jayant.activitytracker.models.User;
 import com.hobby.jayant.activitytracker.models.Yoga;
 import com.hobby.jayant.activitytracker.services.ActivityTrackerService;
 import com.hobby.jayant.activitytracker.services.ExerciseActService;
 import com.hobby.jayant.activitytracker.services.ShootingActService;
-import com.hobby.jayant.activitytracker.services.UserService;
 import com.hobby.jayant.activitytracker.services.YogaActService;
 
 
@@ -88,8 +83,8 @@ public class CreateSaveActivity extends AppCompatActivity implements View.OnClic
         Intent intent = getIntent();
          pageTitle = intent.getStringExtra("pagetitle");
 
-        SharedPreferences usersettings = getSharedPreferences(SiginActivity.PREFS_NAME, 0);
-        basicAuthToken = usersettings.getString(SiginActivity.BASIC_AUTH_TOKEN,"null");
+        SharedPreferences usersettings = getSharedPreferences(SigninActivity.PREFS_NAME, 0);
+        basicAuthToken = usersettings.getString(SigninActivity.BASIC_AUTH_TOKEN,null);
 
         if(MainActivity.PAGETYPE.SHOOTING.toString().equals(pageTitle)){
             setContentView(R.layout.shooting_create_save);

@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.RelativeLayout;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -19,6 +22,16 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
+        int ROTATE_ANIMATION_DURATION = 800;
+
+        RotateAnimation rotate = new RotateAnimation(
+                0, 360,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+        );
+        rotate.setDuration(ROTATE_ANIMATION_DURATION);
+        rotate.setRepeatCount(Animation.INFINITE);
+        bmImage.startAnimation(rotate);
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -50,6 +63,9 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
+        bmImage.clearAnimation();
+        // set layout height and width to match parent
+        bmImage.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         bmImage.setImageBitmap(result);
     }
 }

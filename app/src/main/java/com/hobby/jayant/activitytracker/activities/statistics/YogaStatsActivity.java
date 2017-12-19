@@ -20,7 +20,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.hobby.jayant.activitytracker.R;
 import com.hobby.jayant.activitytracker.activities.MainActivity;
-import com.hobby.jayant.activitytracker.activities.SiginActivity;
+import com.hobby.jayant.activitytracker.activities.SigninActivity;
 import com.hobby.jayant.activitytracker.custom.CustomEntry;
 import com.hobby.jayant.activitytracker.custom.MyMarkerView;
 import com.hobby.jayant.activitytracker.models.Yoga;
@@ -52,8 +52,8 @@ public class YogaStatsActivity extends AppCompatActivity  {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences usersettings = getSharedPreferences(SiginActivity.PREFS_NAME, 0);
-        basicAuthToken = usersettings.getString(SiginActivity.BASIC_AUTH_TOKEN,"null");
+        SharedPreferences usersettings = getSharedPreferences(SigninActivity.PREFS_NAME, 0);
+        basicAuthToken = usersettings.getString(SigninActivity.BASIC_AUTH_TOKEN,null);
 
         initActivity();
 

@@ -15,7 +15,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class SigninActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -112,8 +111,8 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignupInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(SiginActivity.this, SignupActivity.class);
-                SiginActivity.this.startActivity(myIntent);
+                Intent myIntent = new Intent(SigninActivity.this, SignupActivity.class);
+                SigninActivity.this.startActivity(myIntent);
             }
         });
 
@@ -246,12 +245,7 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void showMainPageAfterLogin(User loggedInUser){
 
         String password = mPasswordView.getText().toString();
-        Intent myIntent = new Intent(SiginActivity.this, MainActivity.class);
-
-        /*myIntent.putExtra("firstname",loggedInUser.getFirstname());
-        myIntent.putExtra("lastname",loggedInUser.getLastname());
-        myIntent.putExtra("emailId",loggedInUser.getEmailId());
-        myIntent.putExtra("pssword",password);*/
+        Intent myIntent = new Intent(SigninActivity.this, MainActivity.class);
 
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -259,14 +253,12 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
         editor.putString(USER_FIRST_NAME, loggedInUser.getFirstname());
         editor.putString(USER_LAST_NAME, loggedInUser.getLastname());
         editor.putString(USER_EMAILID, loggedInUser.getEmailId());
-
         editor.putString(BASIC_AUTH_TOKEN, Credentials.basic(loggedInUser.getEmailId(),
                 password));
-
         // Commit the edits!
         editor.commit();
 
-        SiginActivity.this.startActivity(myIntent);
+        SigninActivity.this.startActivity(myIntent);
     }
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
@@ -351,7 +343,7 @@ public class SiginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(SiginActivity.this,
+                new ArrayAdapter<>(SigninActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);

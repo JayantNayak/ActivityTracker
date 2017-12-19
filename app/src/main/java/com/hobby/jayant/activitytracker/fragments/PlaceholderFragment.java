@@ -55,13 +55,16 @@ public class PlaceholderFragment extends Fragment {
         //String MY_URL_STRING = "https://www.biggerbolderbaking.com/wp-content/uploads/2016/05/BBB124-Top-5-Homemade-Ice-Cream-Flavors-Thumbnail-FINAL-2-1024x576.jpg";
         String MY_URL_STRING = "https://gdurl.com/0YBQ";
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-       // TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-
-        if(dummyItem!=null ){
+        if(dummyItem!=null && dummyItem.getImageUrl() != null && !"".equals(dummyItem.getImageUrl())  ){
             MY_URL_STRING = dummyItem.getImageUrl();
         }
-        new DownloadImageTask((ImageView) rootView.findViewById(R.id.imageView))
-                .execute(MY_URL_STRING);
+        // currently not able to handle slow connection as update on imageview
+        // gets called before download is finished
+
+        ImageView imgView = (ImageView) rootView.findViewById(R.id.imageView);
+        new DownloadImageTask(imgView)
+                    .execute(MY_URL_STRING);
+
         return rootView;
     }
 

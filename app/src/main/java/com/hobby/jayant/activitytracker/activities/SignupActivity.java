@@ -3,6 +3,7 @@ package com.hobby.jayant.activitytracker.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public class SignupActivity extends AppCompatActivity{
     private View mProgressView;
     private View mLoginFormView;
     private Button mEmailSignUpButton;
+    private ProgressDialog progressDialog ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,11 @@ public class SignupActivity extends AppCompatActivity{
 
             }
         });
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
     }
 
     private void attemptLogin() {
@@ -136,9 +144,13 @@ public class SignupActivity extends AppCompatActivity{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             //showProgress(true);
-            //mAuthTask = new SiginActivity.UserLoginTask(email, password);
+            //mAuthTask = new SigninActivity.UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
 
+
+
+            progressDialog.setMessage("Signing up.");
+            progressDialog.show();
 
 
             User signUpUser = new User( firstname,  lastname, email, password);
@@ -155,13 +167,13 @@ public class SignupActivity extends AppCompatActivity{
                     }
                     else if(response.code()==  HttpURLConnection.HTTP_CREATED || response.code()==  HttpURLConnection.HTTP_OK){
                         displayToast("User created. Please login");
-                        Intent myIntent = new Intent(SignupActivity.this, SiginActivity.class);
+                        Intent myIntent = new Intent(SignupActivity.this, SigninActivity.class);
                         SignupActivity.this.startActivity(myIntent);
 
                     }else{
                         displayToast("Server Error! Try again later.");
                     }
-
+                    progressDialog.dismiss();
 
                 }
                 @Override
@@ -169,6 +181,7 @@ public class SignupActivity extends AppCompatActivity{
                     //final TextView textView = (TextView) findViewById(R.id.textView);
                     //textView.setText("Something went wrong: " + t.getMessage());
                     displayToast("Something went wrong." );
+                    progressDialog.dismiss();
                 }
             });
 

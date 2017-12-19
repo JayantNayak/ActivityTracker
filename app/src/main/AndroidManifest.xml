@@ -15,7 +15,7 @@
     <application
         android:name=".ActivityTracker"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/stopwatch"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -49,13 +49,18 @@
             -->
         </activity>
         <activity
-            android:name=".activities.SiginActivity"
+            android:name=".activities.SigninActivity"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name=".activities.LauncherActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.MainActivity"
@@ -100,6 +105,15 @@
         <activity
             android:name=".activities.statistics.ShootingStatsActivity"
             android:label="@string/title_activity_shooting_stats"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hobby.jayant.activitytracker.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

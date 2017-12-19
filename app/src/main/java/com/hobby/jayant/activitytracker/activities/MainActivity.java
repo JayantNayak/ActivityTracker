@@ -92,15 +92,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        /*String firstname = intent.getStringExtra("firstname");
-        String lastname = intent.getStringExtra("lastname");
-         emailId = intent.getStringExtra("emailId");
-         password = intent.getStringExtra("password");*/
-
-        SharedPreferences usersettings = getSharedPreferences(SiginActivity.PREFS_NAME, 0);
-        String firstname = usersettings.getString(SiginActivity.USER_FIRST_NAME,"null");
-        String lastname = usersettings.getString(SiginActivity.USER_LAST_NAME,"null");
-        basicAuthToken = usersettings.getString(SiginActivity.BASIC_AUTH_TOKEN,"null");
+        SharedPreferences usersettings = getSharedPreferences(SigninActivity.PREFS_NAME, 0);
+        String firstname = usersettings.getString(SigninActivity.USER_FIRST_NAME,null);
+        String lastname = usersettings.getString(SigninActivity.USER_LAST_NAME,null);
+        basicAuthToken = usersettings.getString(SigninActivity.BASIC_AUTH_TOKEN,null);
 
         profileUserName = firstname +" "+ lastname;
 
@@ -130,8 +125,6 @@ public class MainActivity extends AppCompatActivity
                 myIntent.putExtra("pagetitle", pageTitle); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
-                Snackbar.make(view, "Replace with your own action " + pageTitle, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
@@ -148,7 +141,6 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         TextView nav_user = (TextView)hView.findViewById(R.id.profileUserName);
         nav_user.setText(profileUserName);
-
 
         if(photosStore == null){
 
@@ -209,8 +201,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            //TextView profileName = (TextView)findViewById(R.id.profileUserName);
-           // profileName.setText(profileUserName);
         }
     }
     private void displayToast(String msg){
@@ -236,8 +226,18 @@ public class MainActivity extends AppCompatActivity
             Intent myIntent = new Intent(MainActivity.this, ShootingStatsActivity.class);
             MainActivity.this.startActivity(myIntent);
 
-        } else if (id == R.id.email) {
-
+        } else if (id == R.id.about) {
+            Intent myIntent = new Intent(MainActivity.this, AboutActivity.class);
+            MainActivity.this.startActivity(myIntent);
+        }
+        else if (id == R.id.signout) {
+            // nullify the authentication token on signout
+            SharedPreferences usersettings = getSharedPreferences(SigninActivity.PREFS_NAME, 0);
+            SharedPreferences.Editor editor = usersettings.edit();
+            editor.putString(SigninActivity.BASIC_AUTH_TOKEN,null);
+            editor.commit();
+            Intent myIntent = new Intent(MainActivity.this, SigninActivity.class);
+            MainActivity.this.startActivity(myIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
